@@ -17,7 +17,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/param-pipeline-jenkinsExe2.git'
+                git 'https://github.com/oriyahazan/param-pipeline-jenkinsExe2'
             }
         }
 
