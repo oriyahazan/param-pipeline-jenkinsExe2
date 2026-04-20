@@ -1,0 +1,22 @@
+- hosts: localhost
+  connection: local
+
+  vars:
+    ports:
+      flask: 5000
+      node: 3000
+
+  tasks:
+    - name: Stop existing container
+      docker_container:
+        name: "{{ service }}"
+        state: absent
+
+    - name: Run container
+      docker_container:
+        name: "{{ service }}"
+        image: "oriyahazan/{{ service }}:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "80:{{ ports[service] }}"
