@@ -15,12 +15,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/oriyahazan/param-pipeline-jenkinsExe2'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
