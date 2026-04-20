@@ -19,4 +19,4 @@
         state: started
         restart_policy: always
         ports:
-          - "80:{{ ports[service] }}"
+          - "8080:{{ ports[service] }}"
