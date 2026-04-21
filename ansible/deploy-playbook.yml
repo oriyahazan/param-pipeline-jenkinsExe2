@@ -2,9 +2,13 @@
   connection: local
 
   vars:
-    ports:
+    container_ports:
       flask: 5000
       node: 3000
+
+    host_ports:
+      flask: 8081
+      node: 8082
 
   tasks:
     - name: Stop existing container
@@ -15,8 +19,8 @@
     - name: Run container
       docker_container:
         name: "{{ service }}"
-        image: "oriyahazan/{{ service }}:latest"
+        image: "oriyahazan/{{ service }}:{{ tag }}"
         state: started
         restart_policy: always
         ports:
-          - "8081:{{ ports[service] }}"
+          - "{{ host_ports[service] }}:{{ container_ports[service] }}"

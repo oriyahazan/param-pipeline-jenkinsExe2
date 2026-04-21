@@ -19,9 +19,24 @@ pipeline {
             steps {
                 script {
                     def service = params.SERVICE
-                    def imageName = "${DOCKERHUB_USER}/${service}:latest"
+                    def tag = env.BUILD_NUMBER
+                    def imageName = "${DOCKERHUB_USER}/${service}:${tag}"
 
                     sh "docker build -t ${imageName} ./${service}"
+                }
+            }
+        }
+
+        stage('Tag Image') {
+            steps {
+                script {
+                    def service = params.SERVICE
+                    def tag = env.BUILD_NUMBER
+
+                    def versionedImage = "${DOCKERHUB_USER}/${service}:${tag}"
+                    def latestImage = "${DOCKERHUB_USER}/${service}:latest"
+
+                    sh "docker tag ${versionedImage} ${latestImage}"
                 }
             }
         }
@@ -30,9 +45,10 @@ pipeline {
             steps {
                 script {
                     def service = params.SERVICE
-                    def imageName = "${DOCKERHUB_USER}/${service}:latest"
+                    def tag = env.BUILD_NUMBER
 
-                    sh "docker push ${imageName}"
+                    sh "docker push ${DOCKERHUB_USER}/${service}:${tag}"
+                    sh "docker push ${DOCKERHUB_USER}/${service}:latest"
                 }
             }
         }
@@ -42,7 +58,7 @@ pipeline {
                 script {
                     sh """
                     ansible-playbook ansible/deploy-playbook.yml \
-                    --extra-vars "service=${params.SERVICE}"
+                    --extra-vars "service=${params.SERVICE} tag=${env.BUILD_NUMBER}"
                     """
                 }
             }
